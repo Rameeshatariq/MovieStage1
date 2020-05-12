@@ -138,9 +138,9 @@ public class MoviesDetail extends AppCompatActivity {
                                 @Override
                                 public void run() {
                                     noteRepository.delete(movieid);
-                                    favourite.setText("Mark as Favourite");
                                 }
                             });
+                            favourite.setText("Mark as Favourite");
 
                         }
                         else{
