@@ -1,25 +1,34 @@
 package com.example.movie_stage1;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.content.Context;
 import android.os.Bundle;
+
+import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.example.movie_stage1.RoomDatabase.FavouriteMovies;
+import com.example.movie_stage1.RoomDatabase.MoviesRepository;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity  {
 
@@ -29,6 +38,16 @@ public class MainActivity extends AppCompatActivity  {
     static  ArrayList<String> releasedate;
     static  ArrayList<String> synopsis;
     static  ArrayList<String> rating;
+    static  ArrayList<String> movieid;
+    static  String TITLE_KEY="title";
+    static  String IMAGE_KEY="poster_path";
+    static  String SYNOPSIS_KEY="overview";
+    static  String RATING_KEY="vote_average";
+    static  String RELEASED_KEY="release_date";
+    static  String ID_KEY="id";
+
+    Context ctx= MainActivity.this;
+
     String apikey = "";
 
     RecyclerView recyclerView;
@@ -55,6 +74,11 @@ public class MainActivity extends AppCompatActivity  {
                 sendPostRequestPopular();
                 break;
 
+            case R.id.favmovies:
+                setTitle(R.string.fav_movie);
+                sendPostRequestFav();
+                break;
+
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -67,11 +91,8 @@ public class MainActivity extends AppCompatActivity  {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
-
-
         recyclerView = findViewById(R.id.movies_poster);
-        recyclerView.setLayoutManager(new GridLayoutManager(this,2));
+        recyclerView.setLayoutManager(new GridLayoutManager(this,calculateNoOfColumns(ctx)));
 
 
         image = new ArrayList<>();
@@ -79,6 +100,7 @@ public class MainActivity extends AppCompatActivity  {
         synopsis = new ArrayList<>();
         releasedate = new ArrayList<>();
         rating = new ArrayList<>();
+        movieid = new ArrayList<>();
 
         sendPostRequestPopular();
         setTitle("Popular Movies");
@@ -93,6 +115,7 @@ public class MainActivity extends AppCompatActivity  {
         synopsis.clear();
         rating.clear();
         releasedate.clear();
+        movieid.clear();
 
         String url = "http://api.themoviedb.org/3/movie/top_rated?api_key="+apikey;
 
@@ -121,16 +144,16 @@ public class MainActivity extends AppCompatActivity  {
 
                         JSONObject jo_inside = m_jArry.getJSONObject(i);
 
-                        image.add(jo_inside.getString("backdrop_path"));
-                        title.add(jo_inside.getString("title"));
-                        releasedate.add(jo_inside.getString("release_date"));
-                        rating.add(jo_inside.getString("vote_average"));
-                        synopsis.add(jo_inside.getString("overview"));
+                        image.add(jo_inside.getString(IMAGE_KEY));
+                        title.add(jo_inside.getString(TITLE_KEY));
+                        releasedate.add(jo_inside.getString(RELEASED_KEY));
+                        rating.add(jo_inside.getString(RATING_KEY));
+                        synopsis.add(jo_inside.getString(SYNOPSIS_KEY));
+                        movieid.add(jo_inside.getString(ID_KEY));
 
-                        Log.d("000888", "onResponse: "+jo_inside.getString("backdrop_path"));
                     }
 
-                    moviesAdapter = new MoviesAdapter(MainActivity.this, image,title,synopsis,releasedate,rating);
+                    moviesAdapter = new MoviesAdapter(MainActivity.this, image,title,synopsis,releasedate,rating,movieid);
                     recyclerView.setAdapter(moviesAdapter);
 
                     Log.d("000999", "onResponse: "+title.toString());
@@ -167,6 +190,7 @@ public class MainActivity extends AppCompatActivity  {
         synopsis.clear();
         rating.clear();
         releasedate.clear();
+        movieid.clear();
 
         String url = "http://api.themoviedb.org/3/movie/popular?api_key="+apikey;
 
@@ -194,16 +218,16 @@ public class MainActivity extends AppCompatActivity  {
 
                         JSONObject jo_inside = m_jArry.getJSONObject(i);
 
-                        image.add(jo_inside.getString("backdrop_path"));
-                        title.add(jo_inside.getString("title"));
-                        releasedate.add(jo_inside.getString("release_date"));
-                        rating.add(jo_inside.getString("vote_average"));
-                        synopsis.add(jo_inside.getString("overview"));
+                        image.add(jo_inside.getString(IMAGE_KEY));
+                        title.add(jo_inside.getString(TITLE_KEY));
+                        releasedate.add(jo_inside.getString(RELEASED_KEY));
+                        rating.add(jo_inside.getString(RATING_KEY));
+                        synopsis.add(jo_inside.getString(SYNOPSIS_KEY));
+                        movieid.add(jo_inside.getString(ID_KEY));
 
-                        Log.d("000777", "onResponse: "+jo_inside.getString("backdrop_path"));
                     }
 
-                    moviesAdapter = new MoviesAdapter(MainActivity.this, image,title,synopsis,releasedate,rating);
+                    moviesAdapter = new MoviesAdapter(MainActivity.this, image,title,synopsis,releasedate,rating,movieid);
                     recyclerView.setAdapter(moviesAdapter);
 
 
@@ -229,5 +253,59 @@ public class MainActivity extends AppCompatActivity  {
 
         AppController.getInstance().addToRequestQueue(strReq, REQUEST_TAG);
     }
+
+    private void sendPostRequestFav() {
+
+        image.clear();
+        title.clear();
+        synopsis.clear();
+        rating.clear();
+        releasedate.clear();
+        movieid.clear();
+
+        MoviesRepository noteRepository = new MoviesRepository(getApplicationContext());
+
+        noteRepository.getTasks().observe(MainActivity.this, new Observer<List<FavouriteMovies>>() {
+            @Override
+            public void onChanged(@Nullable List<FavouriteMovies> notes) {
+                for(FavouriteMovies note : notes) {
+
+                    title.add(note.getMovie_name());
+                    image.add(note.getImage());
+                    synopsis.add(note.getSynopsis());
+                    movieid.add(note.getMovie_id());
+                    releasedate.add(note.getReleased_date());
+                    rating.add(note.getRating());
+
+                    System.out.println("-----------------------");
+                    System.out.println(note.getId());
+                    System.out.println(note.getMovie_id());
+                    System.out.println(note.getMovie_name());
+                    System.out.println(note.getReleased_date());
+                    System.out.println(note.getSynopsis());
+                    System.out.println(note.getRating());
+
+                }
+
+                moviesAdapter = new MoviesAdapter(MainActivity.this, image,title,synopsis,releasedate,rating,movieid);
+                recyclerView.setAdapter(moviesAdapter);
+
+            }
+        });
+
+
+
+    }
+
+
+    public static int calculateNoOfColumns(Context context) {
+        DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
+        float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
+        int scalingFactor = 180;
+        int noOfColumns = (int) (dpWidth / scalingFactor);
+        return noOfColumns;
+    }
+
+
 
 }

@@ -10,7 +10,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MoviesDetail"></activity>
+        <activity android:name=".MoviesDetail">
+            <meta-data
+                android:name = "android.support.PARENT_ACTIVITY"
+                android:value="com.example.movie_stage1.MainActivity"/>
+        </activity>
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

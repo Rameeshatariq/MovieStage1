@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Movie-Stage1</string>
     <string name="popular_movie">Popular Movies</string>
+    <string name="fav_movie">Favourite Movies</string>
     <string name="toprated_movie">Top Rated Movies</string>
     <string name="title">Title</string>
     <string name="synopsis">A plot Synopsis:</string>

@@ -21,12 +21,14 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder
     private List<String> synopsis;
     private List<String> title;
     private List<String> released;
+    private List<String> movieid;
 
     private LayoutInflater mInflater;
     private ItemClickListener mClickListener;
     Context context;
 
-    MoviesAdapter(Context context, List<String> data, List<String> title,List<String> synopsis, List<String> released, List<String> rating) {
+    MoviesAdapter(Context context, List<String> data, List<String> title, List<String> synopsis, List<String> released,
+                  List<String> rating, List<String> movieid) {
         this.mInflater = LayoutInflater.from(context);
         this.context = context;
         this.mData = data;
@@ -34,6 +36,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder
         this.released = released;
         this.title = title;
         this.rating = rating;
+        this.movieid = movieid;
 
     }
 
@@ -58,6 +61,8 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder
                 intent.putExtra("synopsis", synopsis.get(position));
                 intent.putExtra("released", released.get(position));
                 intent.putExtra("rating", rating.get(position));
+                intent.putExtra("movieid", movieid.get(position));
+
                 context.startActivity(intent);
 
                 Log.d("000999", "onClick: "+mData.get(position));
@@ -98,6 +103,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder
     void setClickListener(ItemClickListener itemClickListener) {
         this.mClickListener = itemClickListener;
     }
+
 
     public interface ItemClickListener {
         void onItemClick(View view, int position);

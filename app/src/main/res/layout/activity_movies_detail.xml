@@ -4,95 +4,172 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="15dp"
     tools:context=".MoviesDetail">
+
+    <RelativeLayout
+        android:id="@+id/title_layout"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:background="@color/title"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/txt_original_title"
+            android:text="@string/title"
+            android:textSize="20dp"
+            android:textColor="#fff"
+            android:layout_centerVertical="true"
+            android:padding="10dp"
+            android:layout_marginTop="10dp"
+            android:textStyle="bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+        </TextView>
+
+
+    </RelativeLayout>
+
 
 
     <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_below="@id/title_layout"
+        android:fillViewport="true"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
         <RelativeLayout
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:paddingBottom="15dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <TextView
-                android:id="@+id/txt_original_title"
-                android:text="@string/title"
-                android:textSize="20dp"
-                android:textColor="#000"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="10dp"
-                android:textStyle="bold"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-            </TextView>
 
             <ImageView
                 android:id="@+id/image"
-                android:layout_below="@id/txt_original_title"
-                android:cropToPadding="true"
                 android:layout_marginTop="10dp"
-                android:layout_width="match_parent"
-                android:layout_height="250dp">
+                android:cropToPadding="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
             </ImageView>
 
             <TextView
-                android:id="@+id/txt_synopsis"
-                android:text="@string/synopsis"
-                android:textSize="15dp"
-                android:layout_below="@+id/image"
-                android:textColor="#000"
-                android:textStyle="bold"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-            </TextView>
-            <TextView
                 android:id="@+id/synopsis_tv"
                 android:text="@string/title"
-                android:layout_below="@+id/txt_synopsis"
+                android:layout_below="@+id/image"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
             </TextView>
 
-            <TextView
-                android:id="@+id/txt_userRating"
-                android:text="@string/rating"
-                android:layout_below="@+id/synopsis_tv"
-                android:textSize="15dp"
-                android:textColor="#000"
-                android:textStyle="bold"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-            </TextView>
+
             <TextView
                 android:id="@+id/userRating_tv"
                 android:text="@string/title"
-                android:layout_below="@+id/txt_userRating"
+                android:layout_toRightOf="@id/image"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="20dp"
+                android:layout_below="@+id/releaseDate_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
             </TextView>
 
-            <TextView
-                android:id="@+id/txt_releaseDate"
-                android:text="@string/released"
+            <Button
+                android:id="@+id/favourite"
+                android:background="@color/title"
                 android:layout_below="@+id/userRating_tv"
-                android:textSize="15dp"
-                android:textColor="#000"
-                android:textStyle="bold"
+                android:layout_toRightOf="@id/image"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="10dp"
+                android:text="Mark as Favourite"
+                android:padding="5dp"
+                android:textColor="#fff"
+                android:textAllCaps="false"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
-            </TextView>
+            </Button>
+
+
             <TextView
                 android:id="@+id/releaseDate_tv"
                 android:text="@string/title"
-                android:layout_below="@+id/txt_releaseDate"
+                android:layout_marginTop="20dp"
+                android:layout_toRightOf="@id/image"
+                android:layout_marginLeft="15dp"
+                android:textSize="25dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
             </TextView>
 
+            <View
+                android:id="@+id/view"
+                android:layout_below="@+id/synopsis_tv"
+                android:background="#B3AFAF"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"></View>
+            <TextView
+                android:id="@+id/txttrailers"
+                android:text="Trailers"
+                android:textSize="20dp"
+                android:textStyle="bold"
+                android:layout_marginTop="10dp"
+                android:layout_below="@+id/view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+            </TextView>
+            <ListView
+                android:id="@+id/trailer_list"
+                android:layout_below="@+id/txttrailers"
+                android:nestedScrollingEnabled="true"
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent">
+            </ListView>
+
+            <View
+                android:id="@+id/view2"
+                android:layout_below="@+id/trailer_list"
+                android:background="#B3AFAF"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"></View>
+            <TextView
+                android:id="@+id/txtreviews"
+                android:text="Reviews"
+                android:textSize="20dp"
+                android:textStyle="bold"
+                android:layout_marginTop="10dp"
+                android:layout_below="@+id/view2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+            </TextView>
+            <ListView
+                android:id="@+id/review_list"
+                android:layout_below="@+id/txtreviews"
+                android:nestedScrollingEnabled="true"
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent">
+            </ListView>
+
+
+
+            <!--
+                        <include
+                            android:id="@+id/movie_reviews_container"
+                            layout="@layout/trailer_layout"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/trailer_list"/>
+            -->
+
+
         </RelativeLayout>
     </ScrollView>
+
+
+
 
 
 </RelativeLayout>
